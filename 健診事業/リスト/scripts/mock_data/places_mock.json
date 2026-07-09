@@ -1,0 +1,111 @@
+{
+  "_comment": "動作確認用の架空データ（実在の店舗ではありません）。Places API (New) のレスポンス形式に合わせてある。_mock_site はモックモード専用のサイトチェック結果。",
+  "places": [
+    {
+      "id": "mock-001",
+      "displayName": { "text": "【架空】栄整体院 本店" },
+      "rating": 4.8,
+      "userRatingCount": 320,
+      "formattedAddress": "愛知県名古屋市中区栄3-1-1",
+      "nationalPhoneNumber": "052-000-0001",
+      "websiteUri": "http://sakae-seitai.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock001",
+      "_mock_site": { "weak_keys": ["https", "viewport", "copyright"], "elapsed": 2.1 }
+    },
+    {
+      "id": "mock-002",
+      "displayName": { "text": "【架空】大須からだ接骨院" },
+      "rating": 4.6,
+      "userRatingCount": 210,
+      "formattedAddress": "愛知県名古屋市中区大須2-2-2",
+      "nationalPhoneNumber": "052-000-0002",
+      "websiteUri": "https://osu-karada.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock002",
+      "_mock_site": { "weak_keys": ["description", "slow"], "elapsed": 4.5 }
+    },
+    {
+      "id": "mock-003",
+      "displayName": { "text": "【架空】伏見バランス整体" },
+      "rating": 4.9,
+      "userRatingCount": 85,
+      "formattedAddress": "愛知県名古屋市中区錦1-3-3",
+      "nationalPhoneNumber": "052-000-0003",
+      "websiteUri": "https://fushimi-balance.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock003",
+      "_mock_site": { "weak_keys": ["viewport", "title", "description", "copyright"], "elapsed": 1.8 }
+    },
+    {
+      "id": "mock-004",
+      "displayName": { "text": "【架空】金山ほぐし処" },
+      "rating": 4.4,
+      "userRatingCount": 150,
+      "formattedAddress": "愛知県名古屋市中区金山1-4-4",
+      "nationalPhoneNumber": "052-000-0004",
+      "websiteUri": "https://kanayama-hogushi.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock004",
+      "_mock_site": { "weak_keys": [], "elapsed": 0.9 }
+    },
+    {
+      "id": "mock-005",
+      "displayName": { "text": "【架空】丸の内スポーツ接骨院" },
+      "rating": 4.5,
+      "userRatingCount": 95,
+      "formattedAddress": "愛知県名古屋市中区丸の内2-5-5",
+      "nationalPhoneNumber": "052-000-0005",
+      "websiteUri": "http://marunouchi-sports.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock005",
+      "_mock_site": { "weak_keys": ["https", "slow"], "elapsed": 5.2 }
+    },
+    {
+      "id": "mock-006",
+      "displayName": { "text": "【架空】上前津リカバリー整体" },
+      "rating": 4.7,
+      "userRatingCount": 60,
+      "formattedAddress": "愛知県名古屋市中区上前津1-6-6",
+      "nationalPhoneNumber": "052-000-0006",
+      "websiteUri": "https://kamimaezu-recovery.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock006",
+      "_mock_site": { "weak_keys": ["unreachable"], "elapsed": 10.0 }
+    },
+    {
+      "id": "mock-007",
+      "displayName": { "text": "【架空】新栄のんびり整体（口コミ少・フィルタ除外想定）" },
+      "rating": 4.9,
+      "userRatingCount": 12,
+      "formattedAddress": "愛知県名古屋市中区新栄1-7-7",
+      "nationalPhoneNumber": "052-000-0007",
+      "websiteUri": "https://shinsakae-nonbiri.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock007"
+    },
+    {
+      "id": "mock-008",
+      "displayName": { "text": "【架空】千代田接骨院（低評価・フィルタ除外想定）" },
+      "rating": 3.8,
+      "userRatingCount": 200,
+      "formattedAddress": "愛知県名古屋市中区千代田2-8-8",
+      "nationalPhoneNumber": "052-000-0008",
+      "websiteUri": "https://chiyoda-sekkotsu.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock008"
+    },
+    {
+      "id": "mock-009",
+      "displayName": { "text": "【架空】松原整体サロン（サイトなし・フィルタ除外想定）" },
+      "rating": 4.6,
+      "userRatingCount": 130,
+      "formattedAddress": "愛知県名古屋市中区松原3-9-9",
+      "nationalPhoneNumber": "052-000-0009",
+      "googleMapsUri": "https://maps.google.com/?cid=mock009"
+    },
+    {
+      "id": "mock-010",
+      "displayName": { "text": "【架空】久屋大通コンディショニング" },
+      "rating": 4.3,
+      "userRatingCount": 55,
+      "formattedAddress": "愛知県名古屋市中区丸の内3-10-10",
+      "nationalPhoneNumber": "052-000-0010",
+      "websiteUri": "https://hisaya-conditioning.example.jp/",
+      "googleMapsUri": "https://maps.google.com/?cid=mock010",
+      "_mock_site": { "weak_keys": ["description"], "elapsed": 1.2 }
+    }
+  ]
+}

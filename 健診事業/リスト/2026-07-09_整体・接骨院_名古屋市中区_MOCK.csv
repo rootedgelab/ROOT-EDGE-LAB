@@ -1,0 +1,15 @@
+﻿優先順位,店名,評価,口コミ数,サイトURL,検出された弱点,DM下書きステータス,繁盛度スコア,サイト弱さスコア,住所,電話,Googleマップ
+1,【架空】栄整体院 本店,4.8,320,http://sakae-seitai.example.jp/,"・HTTPS非対応（httpのまま）
+・viewportメタタグなし（スマホ非対応の疑い）
+・コピーライト年が古い",,1536.0,70,愛知県名古屋市中区栄3-1-1,052-000-0001,https://maps.google.com/?cid=mock001
+2,【架空】伏見バランス整体,4.9,85,https://fushimi-balance.example.jp/,"・viewportメタタグなし（スマホ非対応の疑い）
+・タイトルタグなし
+・ディスクリプションなし
+・コピーライト年が古い",,416.5,60,愛知県名古屋市中区錦1-3-3,052-000-0003,https://maps.google.com/?cid=mock003
+3,【架空】大須からだ接骨院,4.6,210,https://osu-karada.example.jp/,"・ディスクリプションなし
+・応答が遅い（4.5秒）",,966.0,20,愛知県名古屋市中区大須2-2-2,052-000-0002,https://maps.google.com/?cid=mock002
+4,【架空】丸の内スポーツ接骨院,4.5,95,http://marunouchi-sports.example.jp/,"・HTTPS非対応（httpのまま）
+・応答が遅い（5.2秒）",,427.5,40,愛知県名古屋市中区丸の内2-5-5,052-000-0005,https://maps.google.com/?cid=mock005
+5,【架空】上前津リカバリー整体,4.7,60,https://kamimaezu-recovery.example.jp/,・サイトにアクセスできない/エラー,,282.0,25,愛知県名古屋市中区上前津1-6-6,052-000-0006,https://maps.google.com/?cid=mock006
+6,【架空】久屋大通コンディショニング,4.3,55,https://hisaya-conditioning.example.jp/,・ディスクリプションなし,,236.5,10,愛知県名古屋市中区丸の内3-10-10,052-000-0010,https://maps.google.com/?cid=mock010
+7,【架空】金山ほぐし処,4.4,150,https://kanayama-hogushi.example.jp/,（機械チェックでは大きな弱点なし）,,660.0,0,愛知県名古屋市中区金山1-4-4,052-000-0004,https://maps.google.com/?cid=mock004
