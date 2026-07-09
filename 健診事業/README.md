@@ -71,7 +71,15 @@ python3 generate_list.py --industry "整体・接骨院" --area "名古屋市中
 
 # 本番（.env にキーが必要）
 python3 generate_list.py --industry "整体・接骨院" --area "名古屋市中区"
+
+# サイトチェックだけ再実行（APIを使わない・既存CSVを上書き更新）
+python3 generate_list.py --recheck "../2026-07-09_整体・接骨院_名古屋市中区.csv"
 ```
+
+※ ネットワーク制限のある環境（Claude Codeのリモート環境など）では店舗サイトに
+接続できず、弱点が「未チェック」・繁盛度順のCSVになる。その場合は普通のPCで
+`--recheck` を実行すればAPIを使わずにサイトチェックだけ完了できる（上書き前の
+CSVは logs/backup/ に自動退避・復元ログ記録）。
 
 処理内容:
 

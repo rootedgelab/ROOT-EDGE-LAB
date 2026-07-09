@@ -7,6 +7,7 @@ Google Places API (New) の Text Search で「{業種} {エリア}」を検索�
 使い方:
     python3 generate_list.py --industry "整体・接骨院" --area "名古屋市中区"
     python3 generate_list.py --industry "整体・接骨院" --area "名古屋市中区" --mock  # APIキー不要の動作確認
+    python3 generate_list.py --recheck ../2026-07-09_整体・接骨院_名古屋市中区.csv  # サイトチェックのみ再実行（API不使用）
 
 ガードレール:
 - データ取得は公式 Places API のみ（スクレイピング禁止）
@@ -19,6 +20,7 @@ import argparse
 import csv
 import json
 import re
+import shutil
 import sys
 import time
 from datetime import date, datetime
@@ -187,30 +189,84 @@ def weak_labels(weak_keys: list, elapsed: float) -> str:
     return "\n".join(labels) if labels else "（機械チェックでは大きな弱点なし）"
 
 
+UNCHECKED_LABEL = "（未チェック: この環境から店舗サイトへ接続できず。--recheck で再実行のこと）"
+
+
+def load_shops_from_csv(csv_path: Path) -> list:
+    """既存CSVから店舗データを読み直す（APIを使わない再チェック用）。"""
+    shops = []
+    with csv_path.open(encoding="utf-8-sig") as f:
+        for row in csv.DictReader(f):
+            shops.append({
+                "店名": row["店名"],
+                "評価": float(row["評価"]) if row["評価"] else None,
+                "口コミ数": int(row["口コミ数"]) if row["口コミ数"] else 0,
+                "住所": row.get("住所", ""),
+                "電話": row.get("電話", ""),
+                "サイトURL": row["サイトURL"],
+                "Googleマップ": row.get("Googleマップ", ""),
+                "DM下書きステータス": row.get("DM下書きステータス", ""),
+                "_mock_site": None,
+            })
+    return shops
+
+
+def backup_before_overwrite(path: Path) -> None:
+    """上書き前に logs/backup/ へ退避し、復元ログに記録する（削除禁止の運用）。"""
+    if not path.exists():
+        return
+    backup_dir = LOG_DIR / "backup"
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup = backup_dir / f"{stamp}_{path.name}"
+    shutil.copy2(path, backup)
+    restore_log = LOG_DIR / "復元ログ.csv"
+    is_new = not restore_log.exists()
+    with restore_log.open("a", newline="", encoding="utf-8-sig") as f:
+        writer = csv.writer(f)
+        if is_new:
+            writer.writerow(["日時", "操作", "元", "新", "上書き退避先"])
+        writer.writerow([datetime.now().isoformat(timespec="seconds"), "overwrite",
+                         str(path), str(path), str(backup)])
+    print(f"上書き前に退避: {backup}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="営業候補リスト生成（サイト健診事業）")
-    parser.add_argument("--industry", required=True, help="業種（例: 整体・接骨院）")
-    parser.add_argument("--area", required=True, help="エリア（例: 名古屋市中区）")
+    parser.add_argument("--industry", help="業種（例: 整体・接骨院）")
+    parser.add_argument("--area", help="エリア（例: 名古屋市中区）")
     parser.add_argument("--mock", action="store_true", help="APIキー不要のモックデータで動作確認")
+    parser.add_argument("--recheck", metavar="CSV",
+                        help="既存CSVのサイトチェックのみ再実行（APIを使わない）")
     args = parser.parse_args()
 
-    query = f"{args.industry} {args.area}"
-    print(f"検索クエリ: {query}" + ("（モックモード）" if args.mock else ""))
-
-    if args.mock:
-        raw_places, request_count = load_mock_places()
+    request_count = 0
+    if args.recheck:
+        recheck_path = Path(args.recheck).resolve()
+        if not recheck_path.exists():
+            sys.exit(f"エラー: CSVが見つかりません: {recheck_path}")
+        print(f"再チェック: {recheck_path.name}（API不使用）")
+        shops = load_shops_from_csv(recheck_path)
     else:
-        load_dotenv(SCRIPT_DIR / ".env")
-        api_key = os.environ.get("GOOGLE_PLACES_API_KEY", "").strip()
-        if not api_key or "ここに" in api_key:
-            sys.exit(
-                "エラー: APIキーが見つかりません。\n"
-                f"  {SCRIPT_DIR / '.env.example'} を .env にコピーし、\n"
-                "  GOOGLE_PLACES_API_KEY に実際のキーを記入してください。"
-            )
-        raw_places, request_count = search_places(api_key, query)
+        if not args.industry or not args.area:
+            sys.exit("エラー: --industry と --area を指定してください（--recheck 時は不要）")
+        query = f"{args.industry} {args.area}"
+        print(f"検索クエリ: {query}" + ("（モックモード）" if args.mock else ""))
 
-    shops = [parse_place(p) for p in raw_places]
+        if args.mock:
+            raw_places, request_count = load_mock_places()
+        else:
+            load_dotenv(SCRIPT_DIR / ".env")
+            api_key = os.environ.get("GOOGLE_PLACES_API_KEY", "").strip()
+            if not api_key or "ここに" in api_key:
+                sys.exit(
+                    "エラー: APIキーが見つかりません。\n"
+                    f"  {SCRIPT_DIR / '.env.example'} を .env にコピーし、\n"
+                    "  GOOGLE_PLACES_API_KEY に実際のキーを記入してください。"
+                )
+            raw_places, request_count = search_places(api_key, query)
+        shops = [parse_place(p) for p in raw_places]
+
     print(f"取得件数: {len(shops)} 件（上限 {MAX_RESULTS} 件）")
     print(f"APIリクエスト数: {request_count} 回 / 概算コスト: ${request_count * COST_PER_REQUEST_USD:.3f}")
     print("  ※ Text Search (Enterprise SKU, 約$0.035/回) 換算。無料枠の範囲は Google Cloud コンソールで確認のこと")
@@ -228,16 +284,34 @@ def main():
         if not args.mock and i < len(passed) - 1:
             time.sleep(SITE_INTERVAL)  # 負荷をかけない
 
+    # ネットワーク制限の検知: 全件が「アクセス不可」なら、こちら側の接続が
+    # 塞がれている可能性が高く、弱さスコアは判定不能として扱う
+    all_unreachable = bool(passed) and all(s["_weak_keys"] == ["unreachable"] for s in passed)
+    if all_unreachable:
+        print("\n警告: 全サイトに接続できませんでした。この環境の外部アクセスが制限されている可能性が高いため、")
+        print("      弱点は「未チェック」とし、繁盛度スコア順で出力します。接続できる環境で --recheck を実行してください。")
+        for s in passed:
+            s["_weak_keys"] = []
+            s["_unchecked"] = True
+            s["サイト弱さスコア"] = ""
+
     # 「商売は強いのにWebが弱い」順: 両スコアを正規化した積で並べる
-    max_hanjo = max((s["繁盛度スコア"] for s in passed), default=1) or 1
-    max_weak = max((s["サイト弱さスコア"] for s in passed), default=1) or 1
-    for s in passed:
-        s["_priority_score"] = (s["繁盛度スコア"] / max_hanjo) * (s["サイト弱さスコア"] / max_weak)
-    passed.sort(key=lambda s: (-s["_priority_score"], -s["繁盛度スコア"]))
+    if all_unreachable:
+        passed.sort(key=lambda s: -s["繁盛度スコア"])
+    else:
+        max_hanjo = max((s["繁盛度スコア"] for s in passed), default=1) or 1
+        max_weak = max((s["サイト弱さスコア"] for s in passed), default=1) or 1
+        for s in passed:
+            s["_priority_score"] = (s["繁盛度スコア"] / max_hanjo) * (s["サイト弱さスコア"] / max_weak)
+        passed.sort(key=lambda s: (-s["_priority_score"], -s["繁盛度スコア"]))
 
     today = date.today().isoformat()
-    suffix = "_MOCK" if args.mock else ""
-    out_path = LIST_DIR / f"{today}_{args.industry}_{args.area}{suffix}.csv"
+    if args.recheck:
+        out_path = recheck_path
+        backup_before_overwrite(out_path)
+    else:
+        suffix = "_MOCK" if args.mock else ""
+        out_path = LIST_DIR / f"{today}_{args.industry}_{args.area}{suffix}.csv"
     columns = [
         "優先順位", "店名", "評価", "口コミ数", "サイトURL", "検出された弱点",
         "DM下書きステータス", "繁盛度スコア", "サイト弱さスコア", "住所", "電話", "Googleマップ",
@@ -252,8 +326,9 @@ def main():
                 "評価": s["評価"],
                 "口コミ数": s["口コミ数"],
                 "サイトURL": s["サイトURL"],
-                "検出された弱点": weak_labels(s["_weak_keys"], s["_elapsed"]),
-                "DM下書きステータス": "",
+                "検出された弱点": UNCHECKED_LABEL if s.get("_unchecked")
+                                 else weak_labels(s["_weak_keys"], s["_elapsed"]),
+                "DM下書きステータス": s.get("DM下書きステータス", ""),
                 "繁盛度スコア": s["繁盛度スコア"],
                 "サイト弱さスコア": s["サイト弱さスコア"],
                 "住所": s["住所"],
@@ -265,10 +340,11 @@ def main():
     LOG_DIR.mkdir(parents=True, exist_ok=True)
     log_path = LOG_DIR / f"{today}_リスト生成.log"
     with log_path.open("a", encoding="utf-8") as f:
+        mode = f"recheck={recheck_path.name}" if args.recheck else f"query={args.industry} {args.area} mock={args.mock}"
         f.write(
-            f"[{datetime.now().isoformat(timespec='seconds')}] query={query} mock={args.mock} "
+            f"[{datetime.now().isoformat(timespec='seconds')}] {mode} "
             f"取得={len(shops)} 通過={len(passed)} APIリクエスト={request_count} "
-            f"概算=${request_count * COST_PER_REQUEST_USD:.3f} 出力={out_path.name}\n"
+            f"概算=${request_count * COST_PER_REQUEST_USD:.3f} 未チェック={all_unreachable} 出力={out_path.name}\n"
         )
 
     print(f"\n出力: {out_path}")
