@@ -1,2 +1,3 @@
 ﻿日時,操作,元,新,上書き退避先
 2026-07-09T10:52:21,move,健診事業/logs/_test_move.txt,健診事業/logs/backup/_test_move.txt,
+2026-07-09T11:17:50,move,健診事業/正本/README_正本を置いてください.md,健診事業/logs/backup/README_正本を置いてください.md,

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サイト健診 — 改善計画書つきWebサイト総点検</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mist:#EFF3F6; --ink:#26343F; --haze:#8FA6B8; --deep:#3A5A73;
+  --glass:rgba(255,255,255,.58); --line:rgba(58,90,115,.16);
+  --serif:'Shippori Mincho',serif; --sans:'Zen Kaku Gothic New',sans-serif; --latin:'Cormorant Garamond',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans); color:var(--ink); background:var(--mist);
+  line-height:1.9; letter-spacing:.04em; font-size:15px;
+  background-image:
+    radial-gradient(60% 40% at 85% -5%, rgba(143,166,184,.28), transparent 70%),
+    radial-gradient(50% 35% at -10% 30%, rgba(255,255,255,.9), transparent 70%);
+  background-attachment:fixed;
+}
+.wrap{max-width:640px;margin:0 auto;padding:0 24px}
+.eyebrow{font-family:var(--latin);font-style:italic;font-size:13px;letter-spacing:.22em;color:var(--haze)}
+h1,h2{font-family:var(--serif);font-weight:600;line-height:1.7;letter-spacing:.08em}
+h2{font-size:21px;margin-bottom:20px}
+.sec{padding:72px 0}
+.fade{opacity:0;transform:translateY(14px);transition:opacity .9s ease,transform .9s ease}
+.fade.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.fade{opacity:1;transform:none;transition:none}}
+
+/* hero */
+header{padding:88px 0 64px;position:relative;overflow:hidden}
+h1{font-size:30px;margin:18px 0 22px}
+.lead{color:#465868;max-width:34em}
+.stem{position:absolute;right:-30px;top:30px;width:190px;opacity:.5;pointer-events:none}
+
+/* 計画書カード（signature） */
+.chart{
+  margin-top:44px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.7);border-radius:14px;
+  box-shadow:0 24px 60px -30px rgba(58,90,115,.35);
+  padding:26px 24px;position:relative;
+}
+.chart::before{content:'KARTE — 01';position:absolute;top:18px;right:22px;font-family:var(--latin);font-size:12px;letter-spacing:.2em;color:var(--haze)}
+.chart .t{font-family:var(--serif);font-size:15px;letter-spacing:.1em;margin-bottom:14px}
+.row{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line);font-size:13px}
+.row b{flex-shrink:0;font-weight:500;color:var(--deep);width:5.5em}
+.tag{display:inline-block;font-size:11px;letter-spacing:.15em;border:1px solid var(--line);border-radius:999px;padding:1px 10px;margin-left:8px;color:var(--deep);vertical-align:2px}
+
+/* points */
+ol.pt{list-style:none;counter-reset:n}
+ol.pt li{counter-increment:n;padding:22px 0;border-top:1px solid var(--line);display:flex;gap:18px}
+ol.pt li::before{content:counter(n,decimal-leading-zero);font-family:var(--latin);font-size:20px;color:var(--haze);line-height:1.4}
+ol.pt h3{font-family:var(--serif);font-size:16px;font-weight:600;margin-bottom:6px;letter-spacing:.08em}
+ol.pt p{font-size:13.5px;color:#465868}
+
+/* flow / price */
+.card{background:var(--glass);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.7);border-radius:14px;padding:26px 24px;box-shadow:0 18px 50px -30px rgba(58,90,115,.3)}
+.price{font-family:var(--latin);font-size:34px;color:var(--deep)}
+.price small{font-family:var(--sans);font-size:12px;color:var(--haze);letter-spacing:.1em}
+.note{font-size:12.5px;color:#5d6e7d;margin-top:14px}
+.flow{font-size:13.5px}
+.flow div{padding:14px 0;border-top:1px solid var(--line);display:flex;gap:14px}
+.flow span{font-family:var(--latin);color:var(--haze)}
+
+/* honesty */
+.quiet{font-family:var(--serif);font-size:17px;line-height:2.3;text-align:center;color:#3c4e5d}
+
+/* CTA */
+.ctabar{position:fixed;bottom:0;left:0;right:0;padding:12px 20px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(239,243,246,.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,.7);display:flex;justify-content:center;z-index:10}
+.btn{display:block;width:100%;max-width:400px;text-align:center;text-decoration:none;
+  background:var(--deep);color:#fff;font-size:14px;letter-spacing:.14em;padding:15px 0;border-radius:999px;
+  box-shadow:0 12px 30px -12px rgba(58,90,115,.6)}
+footer{padding:64px 0 130px;text-align:center;font-size:12px;color:var(--haze);letter-spacing:.12em}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <svg class="stem" viewBox="0 0 120 260" fill="none" stroke="#8FA6B8" stroke-width="1.1">
+    <path d="M60 250 C58 180 64 120 52 60 M52 60 C48 44 38 34 28 30 M52 60 C58 42 70 34 84 32 M56 130 C44 118 36 106 34 92 M58 110 C70 100 78 88 80 74"/>
+    <circle cx="28" cy="28" r="5"/><circle cx="86" cy="30" r="4"/><circle cx="33" cy="90" r="3.5"/><circle cx="81" cy="72" r="3.5"/>
+  </svg>
+  <p class="eyebrow fade">SITE KENSHIN</p>
+  <h1 class="fade">サイト、作ってから<br>見直していますか。</h1>
+  <p class="lead fade">サイト健診は、いまあるWebサイトを7つの観点で総点検し、「何を・なぜ・どの順で直すか」を一冊の改善計画書にしてお渡しするサービスです。作り直しの提案ではなく、まず現状を正しく知るところから。</p>
+
+  <div class="chart fade" aria-label="改善計画書のサンプル">
+    <p class="t">改善計画書（抜粋見本）</p>
+    <div class="row"><b>症状</b><span>予約ボタンがメニューの中にあり、初めての方は3タップ必要<span class="tag">重大度 高</span></span></div>
+    <div class="row"><b>なぜ問題か</b><span>スマホの来訪者が迷った時点で、電話にもLINEにも進めず離脱しやすい</span></div>
+    <div class="row"><b>修正案</b><span>画面下に「予約する」を常時表示。営業時間外はLINEを最優先に</span></div>
+  </div>
+</header>
+
+<section class="sec wrap">
+  <p class="eyebrow fade">SEVEN VIEWS</p>
+  <h2 class="fade">7つの観点で、丁寧に。</h2>
+  <ol class="pt">
+    <li class="fade"><div><h3>スマホでの見え方と速さ</h3><p>実際のスマホで開き、最初の3秒で「誰のためのお店か」が伝わるかを確かめます。</p></div></li>
+    <li class="fade"><div><h3>予約・お問い合わせまでの道のり</h3><p>予約までのタップ数、迷いやすい場所、営業時間外の受け皿を点検します。</p></div></li>
+    <li class="fade"><div><h3>初めての方の安心感</h3><p>「高い？ 痛い? 入りにくい?」——初めての方の不安に、サイトが答えているか。</p></div></li>
+    <li class="fade"><div><h3>言葉と情報の整理</h3><p>大事なことが埋もれていないか。読む順番は自然か。</p></div></li>
+    <li class="fade"><div><h3>読みやすさと余白</h3><p>文字の大きさ、行間、色の対比。読み手への思いやりの部分です。</p></div></li>
+    <li class="fade"><div><h3>世界観の一貫性</h3><p>写真・色・言葉のトーンが、お店の雰囲気と揃っているか。</p></div></li>
+    <li class="fade"><div><h3>目に見えない不具合</h3><p>切れたリンク、共有時の表示くずれなど、気づきにくい部分まで。</p></div></li>
+  </ol>
+</section>
+
+<section class="sec wrap">
+  <p class="eyebrow fade">PRICE & FLOW</p>
+  <h2 class="fade">料金と、進み方。</h2>
+  <div class="card fade">
+    <p class="price">¥55,000 <small>（税込）／ 納品 5営業日</small></p>
+    <div class="flow" style="margin-top:16px">
+      <div><span>01</span>ヒアリング（30分・LINEまたはお店で）</div>
+      <div><span>02</span>総点検（お店の営業には一切影響しません）</div>
+      <div><span>03</span>改善計画書のお渡し＋15分の解説</div>
+    </div>
+    <p class="note">計画書には「ご自身で直せる項目」を分けて記載します。修正の実装をご依頼いただく義務はありません。ご希望の場合のみ、お見積り（¥165,000〜）をお出しします。</p>
+  </div>
+</section>
+
+<section class="sec wrap">
+  <p class="quiet fade">効果の約束はしません。<br>不安を煽ることも、しません。<br>いまのサイトの良いところも、<br>ちゃんとお伝えします。</p>
+</section>
+
+<footer class="wrap">SITE KENSHIN — Nagoya<br>Web設計・制作 しょーた</footer>
+
+<div class="ctabar"><a class="btn" href="#" aria-label="LINEで相談する">LINEで相談する（無料）</a></div>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.fade').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
